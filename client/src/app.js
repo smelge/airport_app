@@ -1,18 +1,15 @@
-// const PubSub = require('./helpers/pubsub.js');
+const Flights = require('./models/flight_model.js');
+const ListView = require('./views/list_view');
 
-const FlightView = require('./views/flights_view.js');
-const HomeView = require('./views/home_view.js');
-const Flight = require('./models/flight.js');
+document.addEventListener('DOMContentLoaded', () => {
 
-document.addEventListener('DOMContentLoaded',()=>{
-  console.log('JS Loaded');
+  const flightListElement = document.querySelector('ul#flight-list');
+  const flightListView = new ListView('flights', flightListElement);
+  flightListView.bindEvents();
 
-  // const home = document.querySelector('div#container');
-  // const homeView = new HomeView(home);
-  // // homeView.render();
-  //
-  // const flightsView = new FlightView(home);
-  // PubSub.subscribe('Flights:data-ready',(evt)=>{
-    // flightsView.render(evt.detail);
-  // })
+  const apiUrl = 'http://localhost:3000';
+
+  const flights = new Flights('flights', `${apiUrl}/flights`);
+  flights.bindEvents();
+  flights.getData();
 });

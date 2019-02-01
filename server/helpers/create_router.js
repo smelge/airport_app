@@ -1,21 +1,46 @@
-const PubSub = require('../../client/src/helpers/pubsub.js');
 const express = require('express');
-
-const createRouter = function(collection){
-  const router = express.Router();
-  const url = 'http://localhost:3000/api/flights.json';
+const createRouter = function(data){
+const router = express.Router();
 
   router.get('/',(req,res)=>{
-    // res.sendFile('index.html');
-    res.json(collection);
+    res.json(data);
+  })
+
+  router.get('/arrivals',(req,res)=>{
+    // Create array of flights arriving
+    var arrivals = [];
+    data.forEach((item,index)=>{
+      if(data[index]["ArrDep"] === 'A'){
+        arrivals.push(data[index]);
+      }
+    });
+    res.json(arrivals);
   });
 
-  router.get('/flights',(req,res)=>{
-    fetch(url)
-    then(res => res.json())
-    .then(data => PubSub.publish('Flights:data-ready',JSON.stringify(data)))
-    .catch((error)=>{
-      PubSub.publish('Flights:error',error);
-    })
+  router.get('/departures',(req,res)=>{
+    // Create array of flights departing
+    var departures = [];
+    data.forEach((item,index)=>{
+      if(data[index]["ArrDep"] === 'D'){
+        departures.push(data[index]);
+      }
+    });
+    res.json(departures);
   });
+
+  router.get('/flight/:FlightNo',(req,res)=>{
+    // Loop through every item in the JSON, find matching FlightNo, get index and display
+    data.forEach((item,index)=>{
+      if(data[index]["FlightNo"] === req.params.FlightNo){
+        // console.log("FOUND: ",data[req.params.FlightNo])
+        res.json(data[index]);
+      } else {
+        // console.log("Found none");
+      }
+    });
+  });
+
+  return router;
 }
+
+module.exports = createRouter;
