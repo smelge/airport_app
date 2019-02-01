@@ -15,16 +15,16 @@ Flights.prototype.bindEvents = function () {
 
 Flights.prototype.getData = function () {
   this.request.get()
-    .then((consumables) => {
-      PubSub.publish(`Flights:${this.category}-data-loaded`, consumables);
+    .then((flights) => {
+      PubSub.publish(`Flights:${this.category}-data-loaded`, flights);
     })
     .catch(console.error);
 };
 
 Flights.prototype.postData = function (formData) {
   this.request.post(formData)
-    .then((consumables) => {
-      PubSub.publish(`Flights:${this.category}-data-loaded`, consumables);
+    .then((flights) => {
+      PubSub.publish(`Flights:${this.category}-data-loaded`, flights);
     });
 };
 

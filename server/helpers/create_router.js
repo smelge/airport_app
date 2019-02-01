@@ -14,7 +14,11 @@ const router = express.Router();
         arrivals.push(data[index]);
       }
     });
-    res.json(arrivals);
+    if(arrivals.size == 0){
+      res.send("There are currently no Arrivals");
+    } else {
+      res.json(arrivals);
+    }
   });
 
   router.get('/departures',(req,res)=>{
@@ -25,19 +29,23 @@ const router = express.Router();
         departures.push(data[index]);
       }
     });
-    res.json(departures);
+    if(departures.size == 0){
+      res.send("There are currently no Departures");
+    } else {
+      res.json(departures);
+    }
   });
 
   router.get('/flight/:FlightNo',(req,res)=>{
     // Loop through every item in the JSON, find matching FlightNo, get index and display
     data.forEach((item,index)=>{
-      if(data[index]["FlightNo"] === req.params.FlightNo){
+      if(data[index]["FlightNo"] == req.params.FlightNo){
         // console.log("FOUND: ",data[req.params.FlightNo])
         res.json(data[index]);
-      } else {
-        // console.log("Found none");
       }
     });
+    // No flight matches? Error!
+    res.send("No Flights found for that Flight Number");
   });
 
   return router;
